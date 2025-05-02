@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trading Bot Live Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
+    h1 { color: #004080; }
+    .card { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .label { font-weight: bold; color: #333; }
+    .value { margin-left: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🧠 Smart Money AI - Trading Bot Live Dashboard</h1>
+  <div class="card" id="binance"><h2>📊 Binance Balances</h2><div id="binance-content">Loading...</div></div>
+  <div class="card" id="questrade-account"><h2>🔐 Questrade Account Info</h2><div id="account-content">Loading...</div></div>
+  <div class="card" id="questrade-balances"><h2>💰 Questrade Balances</h2><div id="balances-content">Loading...</div></div>
+  <div class="card" id="questrade-positions"><h2>📈 Questrade Positions</h2><div id="positions-content">Loading...</div></div>
+  <div class="card" id="questrade-quote"><h2>📉 Questrade Quote</h2><div id="quote-content">Loading...</div></div>
+  <script>
+    async function fetchData() {
+      const binance = await fetch('https://your-api-host/api/binance').then(r => r.json());
+      const account = await fetch('https://your-api-host/api/questrade/account').then(r => r.json());
+      const balances = await fetch('https://your-api-host/api/questrade/balances').then(r => r.json());
+      const positions = await fetch('https://your-api-host/api/questrade/positions').then(r => r.json());
+      const quote = await fetch('https://your-api-host/api/questrade/quote?symbol=AAPL').then(r => r.json());
+
+      document.getElementById('binance-content').innerHTML = binance.map(b => `<p><span class='label'>${b.asset}:</span><span class='value'>${b.total}</span></p>`).join('');
+      document.getElementById('account-content').innerHTML = `<p><span class='label'>Account ID:</span><span class='value'>${account.id}</span></p><p><span class='label'>Type:</span><span class='value'>${account.type}</span></p><p><span class='label'>Status:</span><span class='value'>${account.status}</span></p>`;
+      document.getElementById('balances-content').innerHTML = balances.map(b => `<p><span class='label'>${b.currency}:</span><span class='value'>${b.amount}</span></p>`).join('');
+      document.getElementById('positions-content').innerHTML = positions.map(p => `<p><span class='label'>${p.symbol}:</span><span class='value'>${p.quantity} shares @ $${p.avgPrice}</span></p>`).join('');
+      document.getElementById('quote-content').innerHTML = `<p><span class='label'>Symbol:</span><span class='value'>${quote.symbol}</span></p><p><span class='label'>Last Price:</span><span class='value'>$${quote.last}</span></p><p><span class='label'>Bid:</span><span class='value'>$${quote.bid}</span></p><p><span class='label'>Ask:</span><span class='value'>$${quote.ask}</span></p>`;
+    }
+    fetchData();
+  </script>
+</body>
+</html>
