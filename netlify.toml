@@ -1,0 +1,16 @@
+
+[build]
+  publish = "frontend"
+  command = ""
+
+[dev]
+  command = "python backend-flask/app.py"
+  port = 5000
+  targetPort = 5000
+  framework = "#custom"
+
+[[redirects]]
+  from = "/api/*"
+  to = "http://localhost:5000/api/:splat"
+  status = 200
+  force = true
